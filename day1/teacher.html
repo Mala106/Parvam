@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teacher Registration Form</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            padding: 40px;
+            width: 100%;
+            max-width: 500px;
+        }
+
+        .container h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="tel"],
+        select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+            font-family: inherit;
+        }
+
+        input[type="text"]:focus,
+        input[type="email"]:focus,
+        input[type="tel"]:focus,
+        select:focus {
+            outline: none;
+            border-color: #f5576c;
+            box-shadow: 0 0 5px rgba(245, 87, 108, 0.3);
+        }
+
+        input.error,
+        select.error {
+            border-color: #e74c3c;
+            background-color: #fadbd8;
+        }
+
+        .error-message {
+            color: #e74c3c;
+            font-size: 12px;
+            margin-top: 5px;
+            display: none;
+        }
+
+        .error-message.show {
+            display: block;
+        }
+
+        .success-message {
+            color: #27ae60;
+            font-size: 12px;
+            margin-top: 5px;
+            display: none;
+        }
+
+        .success-message.show {
+            display: block;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 30px;
+        }
+
+        button {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .submit-btn {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+        }
+
+        .submit-btn:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(245, 87, 108, 0.4);
+        }
+
+        .reset-btn {
+            background-color: #95a5a6;
+            color: white;
+        }
+
+        .reset-btn:hover {
+            background-color: #7f8c8d;
+        }
+
+        .success-container {
+            background-color: #d5f4e6;
+            border: 2px solid #27ae60;
+            border-radius: 5px;
+            padding: 15px;
+            margin-top: 20px;
+            text-align: center;
+            color: #27ae60;
+            display: none;
+            font-weight: 600;
+        }
+
+        .success-container.show {
+            display: block;
+        }
+
+        .required {
+            color: #e74c3c;
+        }
+
+        .info-text {
+            font-size: 12px;
+            color: #999;
+            margin-top: 3px;
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 25px;
+            }
+
+            .container h1 {
+                font-size: 24px;
+            }
+
+            .button-group {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Teacher Registration</h1>
+        <p class="subtitle">Please fill out all fields below</p>
+
+        <form id="registrationForm" onsubmit="handleSubmit(event)">
+            <!-- Name Field -->
+            <div class="form-group">
+                <label for="name">Full Name <span class="required">*</span></label>
+                <input 
+                    type="text" 
+                    id="name" 
+                    name="name" 
+                    placeholder="Enter your full name"
+                    onblur="validateName()"
+                    oninput="clearError('name')"
+                >
+                <div class="error-message" id="nameError"></div>
+                <div class="success-message" id="nameSuccess">✓ Valid name</div>
+                <div class="info-text">Letters and spaces only</div>
+            </div>
+
+            <!-- Email Field -->
+            <div class="form-group">
+                <label for="email">Email Address <span class="required">*</span></label>
+                <input 
+                    type="email" 
+                    id="email" 
+                    name="email" 
+                    placeholder="example@domain.com"
+                    onblur="validateEmail()"
+                    oninput="clearError('email')"
+                >
+                <div class="error-message" id="emailError"></div>
+                <div class="success-message" id="emailSuccess">✓ Valid email</div>
+                <div class="info-text">Use a valid email format</div>
+            </div>
+
+            <!-- Phone Number Field -->
+            <div class="form-group">
+                <label for="phone">Phone Number <span class="required">*</span></label>
+                <input 
+                    type="tel" 
+                    id="phone" 
+                    name="phone" 
+                    placeholder="Enter 10-digit phone number"
+                    onblur="validatePhone()"
+                    oninput="clearError('phone')"
+                >
+                <div class="error-message" id="phoneError"></div>
+                <div class="success-message" id="phoneSuccess">✓ Valid phone number</div>
+                <div class="info-text">Format: 10 digits (e.g., 9876543210)</div>
+            </div>
+
+            <!-- Subject Field -->
+            <div class="form-group">
+                <label for="subject">Subject <span class="required">*</span></label>
+                <select 
+                    id="subject" 
+                    name="subject"
+                    onchange="validateSubject()"
+                    onblur="validateSubject()"
+                >
+                    <option value="">-- Select Your Subject --</option>
+                    <option value="Mathematics">Mathematics</option>
+                    <option value="English">English</option>
+                    <option value="Science">Science</option>
+                    <option value="Physics">Physics</option>
+                    <option value="Chemistry">Chemistry</option>
+                    <option value="Biology">Biology</option>
+                    <option value="History">History</option>
+                    <option value="Geography">Geography</option>
+                    <option value="Civics">Civics</option>
+                    <option value="Computer Science">Computer Science</option>
+                    <option value="Physical Education">Physical Education</option>
+                    <option value="Art">Art</option>
+                    <option value="Music">Music</option>
+                    <option value="Hindi">Hindi</option>
+                    <option value="Sanskrit">Sanskrit</option>
+                </select>
+                <div class="error-message" id="subjectError"></div>
+                <div class="success-message" id="subjectSuccess">✓ Subject selected</div>
+            </div>
+
+            <!-- Buttons -->
+            <div class="button-group">
+                <button type="submit" class="submit-btn">Register</button>
+                <button type="reset" class="reset-btn" onclick="resetForm()">Clear</button>
+            </div>
+        </form>
+
+        <!-- Success Message -->
+        <div class="success-container" id="successContainer">
+            <p>✓ Registration Successful!</p>
+            <p id="successDetails"></p>
+        </div>
+    </div>
+
+    <script>
+        // Validation Functions
+
+        function validateName() {
+            const nameInput = document.getElementById('name');
+            const nameError = document.getElementById('nameError');
+            const nameSuccess = document.getElementById('nameSuccess');
+            const value = nameInput.value.trim();
+
+            if (value === '') {
+                showError('name', 'Name is required');
+                return false;
+            }
+
+            // Allow letters, spaces, hyphens, and apostrophes
+            const nameRegex = /^[a-zA-Z\s'-]+$/;
+            if (!nameRegex.test(value)) {
+                showError('name', 'Name can only contain letters, spaces, hyphens, and apostrophes');
+                return false;
+            }
+
+            if (value.length < 2) {
+                showError('name', 'Name must be at least 2 characters long');
+                return false;
+            }
+
+            if (value.length > 50) {
+                showError('name', 'Name cannot exceed 50 characters');
+                return false;
+            }
+
+            clearError('name');
+            nameInput.classList.remove('error');
+            nameSuccess.classList.add('show');
+            return true;
+        }
+
+        function validateEmail() {
+            const emailInput = document.getElementById('email');
+            const emailError = document.getElementById('emailError');
+            const emailSuccess = document.getElementById('emailSuccess');
+            const value = emailInput.value.trim();
+
+            if (value === '') {
+                showError('email', 'Email is required');
+                return false;
+            }
+
+            // Standard email validation regex
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(value)) {
+                showError('email', 'Please enter a valid email address');
+                return false;
+            }
+
+            clearError('email');
+            emailInput.classList.remove('error');
+            emailSuccess.classList.add('show');
+            return true;
+        }
+
+        function validatePhone() {
+            const phoneInput = document.getElementById('phone');
+            const phoneError = document.getElementById('phoneError');
+            const phoneSuccess = document.getElementById('phoneSuccess');
+            const value = phoneInput.value.trim();
+
+            if (value === '') {
+                showError('phone', 'Phone number is required');
+                return false;
+            }
+
+            // Remove any non-digit characters for validation
+            const digitsOnly = value.replace(/\D/g, '');
+
+            if (digitsOnly.length !== 10) {
+                showError('phone', 'Phone number must contain exactly 10 digits');
+                return false;
+            }
+
+            if (!/^\d+$/.test(digitsOnly)) {
+                showError('phone', 'Phone number can only contain digits and hyphens/spaces');
+                return false;
+            }
+
+            clearError('phone');
+            phoneInput.classList.remove('error');
+            phoneSuccess.classList.add('show');
+            return true;
+        }
+
+        function validateSubject() {
+            const subjectInput = document.getElementById('subject');
+            const subjectError = document.getElementById('subjectError');
+            const subjectSuccess = document.getElementById('subjectSuccess');
+            const value = subjectInput.value.trim();
+
+            if (value === '') {
+                showError('subject', 'Please select a subject');
+                return false;
+            }
+
+            clearError('subject');
+            subjectInput.classList.remove('error');
+            subjectSuccess.classList.add('show');
+            return true;
+        }
+
+        function showError(fieldId, message) {
+            const input = document.getElementById(fieldId);
+            const errorMsg = document.getElementById(fieldId + 'Error');
+            const successMsg = document.getElementById(fieldId + 'Success');
+
+            input.classList.add('error');
+            errorMsg.textContent = '✗ ' + message;
+            errorMsg.classList.add('show');
+            successMsg.classList.remove('show');
+        }
+
+        function clearError(fieldId) {
+            const errorMsg = document.getElementById(fieldId + 'Error');
+            errorMsg.classList.remove('show');
+        }
+
+        function handleSubmit(event) {
+            event.preventDefault();
+
+            // Validate all fields
+            const isNameValid = validateName();
+            const isEmailValid = validateEmail();
+            const isPhoneValid = validatePhone();
+            const isSubjectValid = validateSubject();
+
+            if (isNameValid && isEmailValid && isPhoneValid && isSubjectValid) {
+                // Get form values
+                const name = document.getElementById('name').value;
+                const email = document.getElementById('email').value;
+                const phone = document.getElementById('phone').value;
+                const subject = document.getElementById('subject').value;
+
+                // Show success message
+                const successContainer = document.getElementById('successContainer');
+                const successDetails = document.getElementById('successDetails');
+                
+                successDetails.innerHTML = `
+                    <strong>Registration Details:</strong><br>
+                    Name: ${name}<br>
+                    Email: ${email}<br>
+                    Phone: ${phone}<br>
+                    Subject: ${subject}
+                `;
+                
+                successContainer.classList.add('show');
+
+                // Log data to console
+                console.log('Teacher Registration Data:', {
+                    name: name,
+                    email: email,
+                    phone: phone,
+                    subject: subject
+                });
+
+                // Optional: Reset form after 3 seconds
+                setTimeout(() => {
+                    document.getElementById('registrationForm').reset();
+                    successContainer.classList.remove('show');
+                    clearAllErrors();
+                }, 3000);
+            }
+        }
+
+        function resetForm() {
+            document.getElementById('registrationForm').reset();
+            clearAllErrors();
+            document.getElementById('successContainer').classList.remove('show');
+        }
+
+        function clearAllErrors() {
+            const fields = ['name', 'email', 'phone', 'subject'];
+            fields.forEach(field => {
+                const input = document.getElementById(field);
+                const errorMsg = document.getElementById(field + 'Error');
+                const successMsg = document.getElementById(field + 'Success');
+                
+                input.classList.remove('error');
+                errorMsg.classList.remove('show');
+                successMsg.classList.remove('show');
+            });
+        }
+
+        // Real-time validation on input
+        document.getElementById('name').addEventListener('input', function() {
+            if (this.value.length > 0) validateName();
+        });
+
+        document.getElementById('email').addEventListener('input', function() {
+            if (this.value.length > 0) validateEmail();
+        });
+
+        document.getElementById('phone').addEventListener('input', function() {
+            if (this.value.length > 0) validatePhone();
+        });
+    </script>
+</body>
+</html>
