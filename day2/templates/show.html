@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Show Students</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 24px;
+            background: #eef2ff;
+            color: #1f2937;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .card {
+            background: #ffffff;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
+        }
+
+        nav a {
+            margin-right: 16px;
+            text-decoration: none;
+            color: #2563eb;
+            font-weight: 600;
+        }
+
+        .student-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 16px;
+            margin-top: 20px;
+        }
+
+        .student-card {
+            border: 1px solid #c7d2fe;
+            border-radius: 12px;
+            padding: 16px;
+            background: #f8faff;
+        }
+
+        .student-card h3 {
+            margin-top: 0;
+            color: #1d4ed8;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <nav>
+            <a href="/home">Home</a>
+            <a href="/about">About</a>
+            <a href="/contact">Contact</a>
+            <a href="/student">Student</a>
+            <a href="/show">Show Students</a>
+        </nav>
+
+        <div class="card">
+            <h1>Student Information</h1>
+            <p>This page displays the currently stored student records.</p>
+
+            {% if students %}
+            <div class="student-list">
+                {% for student in students %}
+                <div class="student-card">
+                    <h3>{{ student.name }}</h3>
+                    <p><strong>ID:</strong> {{ student.student_id }}</p>
+                    <p><strong>Age:</strong> {{ student.age }}</p>
+                    <p><strong>Course:</strong> {{ student.course }}</p>
+                    <p><strong>Email:</strong> {{ student.email }}</p>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <p>No student data available. Add records from the student page.</p>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>
