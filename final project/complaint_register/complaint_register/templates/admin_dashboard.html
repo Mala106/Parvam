@@ -1,0 +1,129 @@
+{% extends 'base.html' %}
+{% block title %}Admin Dashboard — Complaint Register{% endblock %}
+
+{% block content %}
+<div class="page-title">Admin Dashboard</div>
+<div class="page-sub">
+  {% if admin_scope %}
+  // assigned issue: {{ admin_scope }} · update status
+  {% else %}
+  // all complaints · filter · update status
+  {% endif %}
+</div>
+
+<!-- Stats -->
+<div class="stats-row">
+  <div class="stat-card total">
+    <div class="label">Total</div>
+    <div class="value">{{ total }}</div>
+  </div>
+  <div class="stat-card pend">
+    <div class="label">Pending</div>
+    <div class="value">{{ pending }}</div>
+  </div>
+  <div class="stat-card prog">
+    <div class="label">In Progress</div>
+    <div class="value">{{ inprog }}</div>
+  </div>
+  <div class="stat-card res">
+    <div class="label">Resolved</div>
+    <div class="value">{{ resolved }}</div>
+  </div>
+</div>
+
+<!-- Filters -->
+<form method="GET" action="{{ url_for('dashboard') }}">
+  <div class="filters">
+    <div class="filter-group">
+      <label>Category</label>
+      {% if admin_scope %}
+      <select name="category" disabled>
+        <option>{{ admin_scope }}</option>
+      </select>
+      {% else %}
+      <select name="category">
+        <option value="">All Categories</option>
+        {% for c in categories %}
+        <option value="{{ c }}" {% if sel_cat==c %}selected{% endif %}>{{ c }}</option>
+        {% endfor %}
+      </select>
+      {% endif %}
+    </div>
+    <div class="filter-group">
+      <label>Status</label>
+      <select name="status">
+        <option value="">All Statuses</option>
+        {% for s in ['Pending','In Progress','Resolved'] %}
+        <option value="{{ s }}" {% if sel_status==s %}selected{% endif %}>{{ s }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <button type="submit" class="btn btn-primary">Filter</button>
+    <a href="{{ url_for('dashboard') }}" class="btn btn-ghost">Clear</a>
+  </div>
+</form>
+
+<!-- Table -->
+<div class="card">
+  <div class="section-header">
+    <div>
+      <h2>Complaints
+        {% if sel_cat or sel_status %}
+        <span style="font-size:14px;color:var(--muted);font-weight:600;">
+          (filtered: {{ complaints|length }} results)
+        </span>
+        {% endif %}
+      </h2>
+    </div>
+  </div>
+
+  {% if complaints %}
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Name</th>
+          <th>Category</th>
+          <th>Description</th>
+          <th>Date</th>
+          <th>Status</th>
+          <th>Update</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for c in complaints %}
+        <tr>
+          <td style="font-family:'DM Mono',monospace;font-size:12px;color:var(--muted);">{{ c.id }}</td>
+          <td style="font-weight:700;">{{ c.name }}</td>
+          <td><span class="badge badge-{{ c.category }}">{{ c.category }}</span></td>
+          <td class="desc-cell"><div class="desc-text" title="{{ c.description }}">{{ c.description }}</div></td>
+          <td style="font-family:'DM Mono',monospace;font-size:12px;white-space:nowrap;">{{ c.date }}</td>
+          <td>
+            {% set parts = c.status.split(' ') %}
+            <span class="badge badge-{{ c.status }}">{{ c.status }}</span>
+          </td>
+          <td>
+            <form method="POST" action="{{ url_for('update_status', cid=c.id) }}" class="inline-form"
+                  style="display:flex;gap:6px;align-items:center;">
+              <select name="status" class="status-select">
+                {% for s in ['Pending','In Progress','Resolved'] %}
+                <option value="{{ s }}" {% if c.status==s %}selected{% endif %}>{{ s }}</option>
+                {% endfor %}
+              </select>
+              <button type="submit" class="save-btn">Save</button>
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <div class="empty">
+    <div class="icon">📭</div>
+    <p>No complaints match the selected filters.</p>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

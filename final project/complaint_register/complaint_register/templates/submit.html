@@ -1,0 +1,158 @@
+{% extends 'base.html' %}
+{% block title %}Submit Complaint — Complaint Register{% endblock %}
+
+{% block extra_style %}
+<style>
+.suggest-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 12px;
+  background: #fffbeb;
+  border: 1.5px solid var(--accent2);
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #b45309;
+  font-family: 'DM Mono', monospace;
+  animation: pop 0.25s ease;
+}
+@keyframes pop {
+  0% { transform: scale(0.85); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+.ai-badge {
+  font-size: 10px;
+  background: var(--accent2);
+  color: white;
+  padding: 1px 5px;
+  border-radius: 3px;
+}
+.submit-card {
+  max-width: 620px;
+  margin: 0 auto;
+}
+.char-count {
+  font-size: 11px;
+  font-family: 'DM Mono', monospace;
+  color: var(--muted);
+  text-align: right;
+  margin-top: 4px;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="page-title">Submit a Complaint</div>
+<div class="page-sub">// fill in the details below · all fields required</div>
+
+<div class="submit-card">
+  <div class="card">
+    <form method="POST" action="{{ url_for('submit') }}">
+
+      <div class="form-group">
+        <label>Your Name</label>
+        <input type="text" name="name" placeholder="Full name" required>
+      </div>
+
+      <div class="form-group">
+        <label>Description
+          <span style="font-size:10px;color:var(--muted);margin-left:8px;font-weight:400;">
+            (ML will auto-suggest category ↓)
+          </span>
+        </label>
+        <textarea name="description" id="desc-input"
+                  placeholder="Describe your complaint in detail…"
+                  required oninput="onDescInput(this)"></textarea>
+        <div class="char-count"><span id="char-count">0</span> / 500 characters</div>
+
+        <!-- AI suggestion appears here -->
+        <div id="suggest-wrap" style="margin-top:10px;min-height:28px;"></div>
+      </div>
+
+      <div class="form-group">
+        <label>Category</label>
+        <select name="category" id="category-select" required>
+          <option value="">— Select category —</option>
+          <option value="Electricity">⚡ Electricity</option>
+          <option value="Water">💧 Water</option>
+          <option value="Food">🍽 Food</option>
+          <option value="Other">📦 Other</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Date of Incident</label>
+        <input type="date" name="date" required
+               value="{{ today }}" max="{{ today }}">
+      </div>
+
+      <button type="submit" class="btn btn-primary" style="width:100%;padding:13px;font-size:15px;">
+        Submit Complaint →
+      </button>
+    </form>
+  </div>
+
+  <div style="margin-top:16px;padding:14px 16px;background:#f0ede6;border-radius:8px;border:1px dashed var(--border);">
+    <p style="font-size:12px;font-family:'DM Mono',monospace;color:var(--muted);line-height:1.7;">
+      <strong style="color:var(--ink);">🤖 ML Auto-Suggest:</strong><br>
+      As you type your description, the system will suggest a category using the trained model.
+      The suggestion is a guide — you can override it freely.
+    </p>
+  </div>
+</div>
+
+<script>
+let debounceTimer = null;
+
+function onDescInput(el) {
+  const text = el.value;
+  document.getElementById('char-count').textContent = text.length;
+
+  clearTimeout(debounceTimer);
+  if (text.trim().length < 10) {
+    document.getElementById('suggest-wrap').innerHTML = '';
+    return;
+  }
+
+  debounceTimer = setTimeout(() => predictCategory(text), 600);
+}
+
+async function predictCategory(text) {
+  try {
+    const res = await fetch('/api/predict', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ text })
+    });
+    const data = await res.json();
+    if (data.category) {
+      const wrap = document.getElementById('suggest-wrap');
+      wrap.innerHTML = `
+        <span class="suggest-tag">
+          <span class="ai-badge">ML</span>
+          Suggested: <strong>${data.category}</strong>
+          <button type="button" onclick="applyCategory('${data.category}')"
+                  style="margin-left:6px;padding:2px 8px;font-size:11px;font-weight:700;
+                         background:var(--accent);color:white;border:none;border-radius:4px;
+                         cursor:pointer;font-family:'Syne',sans-serif;">
+            Apply ✓
+          </button>
+        </span>`;
+    }
+  } catch(e) { /* model not yet trained — silent fail */ }
+}
+
+function applyCategory(cat) {
+  const sel = document.getElementById('category-select');
+  for (let opt of sel.options) {
+    if (opt.value === cat) { sel.value = cat; break; }
+  }
+  document.getElementById('suggest-wrap').innerHTML =
+    `<span style="font-size:12px;font-family:'DM Mono',monospace;color:var(--green);">
+      ✓ Category applied: <strong>${cat}</strong>
+    </span>`;
+}
+
+</script>
+{% endblock %}

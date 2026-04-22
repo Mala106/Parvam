@@ -1,0 +1,31 @@
+id,user_id,name,category,description,date,status
+1,2,Alice,Electricity,Street light not working near Block-A,2024-01-10,Resolved
+2,2,Alice,Water,No water supply for 3 days,2024-01-12,Pending
+3,3,Bob,Food,Canteen food quality is very poor,2024-01-14,In Progress
+4,2,Alice,Other,Garbage not collected for a week,2024-01-15,Pending
+5,3,Bob,Electricity,Frequent power cuts in Hostel B,2024-01-17,Resolved
+6,2,Alice,Water,Water pipe burst on main road,2024-01-18,In Progress
+7,3,Bob,Food,Mess food contains insects,2024-01-20,Pending
+8,2,Alice,Electricity,No electricity in reading room,2024-01-21,Resolved
+9,3,Bob,Other,Wi-Fi not working in lab,2024-01-22,In Progress
+10,2,Alice,Water,Water tank overflowing causing damage,2024-01-23,Pending
+11,3,Bob,Electricity,Electricity bill discrepancy,2024-01-25,Resolved
+12,2,Alice,Food,Food served cold at dinner,2024-01-26,In Progress
+13,3,Bob,Other,Road potholes causing accidents,2024-01-28,Pending
+14,2,Alice,Water,Drinking water tastes bad,2024-01-29,Resolved
+15,3,Bob,Electricity,Short circuit in room 204,2024-01-30,In Progress
+16,2,Alice,Food,Portion size drastically reduced,2024-02-01,Pending
+17,3,Bob,Other,Loud noise from construction at night,2024-02-03,Resolved
+18,2,Alice,Electricity,AC not working in exam hall,2024-02-05,Pending
+19,3,Bob,Water,Water cooler broken in Block-C,2024-02-07,In Progress
+20,2,Alice,Food,No vegetarian options available,2024-02-08,Pending
+21,3,Bob,Other,Lift malfunction in main building,2024-02-10,Resolved
+22,2,Alice,Water,Sewage smell near dining hall,2024-02-12,Pending
+23,3,Bob,Electricity,Lights flickering in corridor,2024-02-14,In Progress
+24,2,Alice,Food,Overpriced items in canteen,2024-02-15,Pending
+25,3,Bob,Other,Parking area flooding in rain,2024-02-17,Resolved
+26,2,Alice,Electricity,Generator not starting during outage,2024-02-19,Pending
+27,3,Bob,Water,Low water pressure in showers,2024-02-20,In Progress
+28,2,Alice,Food,Unhygienic kitchen conditions observed,2024-02-22,Pending
+29,3,Bob,Other,CCTV cameras not functioning,2024-02-24,Resolved
+30,2,Alice,Water,Rainwater leaking into rooms,2024-02-25,Pending

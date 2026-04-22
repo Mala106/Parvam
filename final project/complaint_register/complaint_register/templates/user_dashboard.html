@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+{% block title %}My Complaints — Complaint Register{% endblock %}
+
+{% block content %}
+<div style="display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:16px;margin-bottom:28px;">
+  <div>
+    <div class="page-title">My Complaints</div>
+    <div class="page-sub">// submitted by you · track status</div>
+  </div>
+  <a href="{{ url_for('submit') }}" class="btn btn-primary" style="margin-top:6px;">+ Submit New Complaint</a>
+</div>
+
+{% if complaints %}
+<div class="card">
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Name</th>
+          <th>Category</th>
+          <th>Description</th>
+          <th>Date</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for c in complaints %}
+        <tr>
+          <td style="font-family:'DM Mono',monospace;font-size:12px;color:var(--muted);">{{ c.id }}</td>
+          <td style="font-weight:700;">{{ c.name }}</td>
+          <td><span class="badge badge-{{ c.category }}">{{ c.category }}</span></td>
+          <td class="desc-cell"><div class="desc-text" title="{{ c.description }}">{{ c.description }}</div></td>
+          <td style="font-family:'DM Mono',monospace;font-size:12px;white-space:nowrap;">{{ c.date }}</td>
+          <td><span class="badge badge-{{ c.status }}">{{ c.status }}</span></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% else %}
+<div class="card">
+  <div class="empty">
+    <div class="icon">📝</div>
+    <p>You haven't submitted any complaints yet.</p>
+    <br>
+    <a href="{{ url_for('submit') }}" class="btn btn-primary">Submit Your First Complaint</a>
+  </div>
+</div>
+{% endif %}
+{% endblock %}
